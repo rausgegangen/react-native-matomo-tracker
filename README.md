@@ -18,7 +18,14 @@ or using yarn:
 ```shell
 yarn add @logicwind/react-native-matomo-tracker
 ```
-Then follow the instructions for your platform to link @logicwind/react-native-matomo-tracker into your project:
+
+### Expo Setup
+
+If you're working with this Expo project, make sure to run:
+
+```sh md title="Terminal"
+npx expo prebuild
+```
 
 ### iOS installation
 

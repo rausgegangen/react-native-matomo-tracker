@@ -9,7 +9,7 @@ RCT_EXTERN_METHOD(trackScreen:(NSString *)screenName withTitle:(NSString *)title
 
 RCT_EXTERN_METHOD(trackDispatch)
 
-RCT_EXTERN_METHOD(trackEvent:(NSString *)category withAction:(NSString *)action withName:(NSString *)name withValue:(NSNumber *)value withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
+RCT_EXTERN_METHOD(trackEvent:(NSString *)category withAction:(NSString *)action withName:(NSString *)name withValue:(nonnull NSNumber *)value withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
 RCT_EXTERN_METHOD(trackOutlink:(NSString *)url withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
@@ -25,7 +25,7 @@ RCT_EXTERN_METHOD(setUserId:(NSString *)id)
 
 RCT_EXTERN_METHOD(trackScreens)
 
-RCT_EXTERN_METHOD(trackGoal:(NSInteger)goalId withRevenue:(NSNumber *)revenue withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
+RCT_EXTERN_METHOD(trackGoal:(NSInteger)goalId withRevenue:(nonnull NSNumber *)revenue withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
 RCT_EXTERN_METHOD(setVisitorId:(NSString *)id)
 

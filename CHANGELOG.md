@@ -1,3 +1,8 @@
+## 0.3.12
+
+- Resolved iOS crash related to trackEvent in React Native v0.74.
+- Updated readme.
+
 ## 0.3.11
 
 - Fixed Apple TVOS crash issue.
