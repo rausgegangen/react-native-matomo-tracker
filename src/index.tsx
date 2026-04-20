@@ -113,8 +113,9 @@ export function trackDownload(
   );
 }
 
-export function setUserId(id: String) {
-  return ReactNativeMatomoTracker.setUserId(id);
+export function setUserId(id: string | null) {
+  const normalized = id == null || id === '' ? null : id;
+  return ReactNativeMatomoTracker.setUserId(normalized);
 }
 
 export function setVisitorId(visitorId: String) {

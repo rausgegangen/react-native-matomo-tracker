@@ -187,9 +187,10 @@ class ReactNativeMatomoTracker: NSObject {
     }
     
     @objc(setUserId:)
-    func setUserId(id: String) {
-        Logger.debug("setUserId called: \(id)")
-        matomoTracker?.userId = id
+    func setUserId(id: NSString?) {
+        Logger.debug("setUserId called: \(id ?? "nil")")
+        let value = id as String?
+        matomoTracker?.userId = (value == nil || value!.isEmpty) ? nil : value
     }
     
     @objc(trackScreens)

@@ -167,10 +167,9 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun setUserId(id:String) {
-    if (tracker != null) {
-      tracker?.setUserId(id);
-    }
+  fun setUserId(id: String?) {
+    val currentTracker = tracker ?: return
+    currentTracker.setUserId(if (id.isNullOrEmpty()) null else id)
   }
 
   @ReactMethod
