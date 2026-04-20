@@ -1,3 +1,9 @@
+## 0.3.13
+
+- Added `contentPiece` and `contentTarget` parameters to `trackImpression` and `trackInteraction` for richer Matomo content tracking.
+- Fixed missing custom dimensions handling in iOS `trackInteraction`.
+- Corrected the podspec git source URL.
+
 ## 0.3.12
 
 - Resolved iOS crash related to trackEvent in React Native v0.74.

@@ -1,4 +1,4 @@
-package com.logicwind.reactnativematomotracker
+package com.rausgegangen.reactnativematomotracker
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -20,6 +20,7 @@ import org.json.JSONObject
 import org.matomo.sdk.Matomo
 import org.matomo.sdk.Tracker
 import org.matomo.sdk.TrackerBuilder
+import org.matomo.sdk.extra.CustomDimension
 import org.matomo.sdk.extra.TrackHelper
 import timber.log.Timber
 import java.net.URL
@@ -129,24 +130,28 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun trackImpression(contentName:String,dimensions: ReadableArray?=null) {
+  fun trackImpression(contentName:String,contentPiece:String="",contentTarget:String="",dimensions: ReadableArray?=null) {
     if (tracker != null) {
       val trackBuilder = TrackHelper.track()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder
         .impression(contentName)
+        .piece(contentPiece)
+        .target(contentTarget)
         .with(tracker);
     }
   }
 
 
   @ReactMethod
-  fun trackInteraction(contentName:String,contentInteraction:String,dimensions: ReadableArray?=null) {
+  fun trackInteraction(contentName:String,contentInteraction:String,contentPiece:String="",contentTarget:String="",dimensions: ReadableArray?=null) {
     if (tracker != null) {
       val trackBuilder = TrackHelper.track()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder
         .interaction(contentName, contentInteraction)
+        .piece(contentPiece)
+        .target(contentTarget)
         .with(tracker)
     }
   }
@@ -279,25 +284,28 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   fun trackCustomDimension(
     dimensions: ReadableArray?=null
   ) {
+    val currentTracker = tracker ?: return
+    if (dimensions == null || dimensions.size() == 0) return
 
-    val trackBuilder = TrackHelper.track()
-    if ( dimensions!=null && dimensions.size() > 0) {
-      for (i in 0 until dimensions.size()) {
-        val dimension = dimensions.getMap(i)
-        val key = dimension?.getString("key")
-        val value = dimension?.getString("value")
-        if (key != null && value != null) {
-          val id = key.toIntOrNull()
-          if (id != null) {
-            trackBuilder.dimension(id,value)
-            trackDispatch();
-          } else {
-            println("Key could not be converted to an Int")
-          }
+    for (i in 0 until dimensions.size()) {
+      val dimension = dimensions.getMap(i)
+      val key = dimension?.getString("key")
+      val value = dimension?.getString("value")
+      if (key != null && value != null) {
+        val id = key.toIntOrNull()
+        if (id != null) {
+          CustomDimension.setDimension(currentTracker.defaultTrackMe, id, value)
+        } else {
+          Log.e(TAG, "Key could not be converted to an Int")
         }
       }
     }
-    trackBuilder.screen("/customDimension").with(tracker)
+  }
+
+  @ReactMethod
+  fun setCustomDimension(id: Int, value: String?) {
+    val currentTracker = tracker ?: return
+    CustomDimension.setDimension(currentTracker.defaultTrackMe, id, value)
   }
 
   @ReactMethod

@@ -1,4 +1,4 @@
-package com.logicwind.reactnativematomotracker
+package com.rausgegangen.reactnativematomotracker
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

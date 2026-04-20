@@ -2362,51 +2362,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@logicwind/react-native-matomo-tracker-example@workspace:example":
-  version: 0.0.0-use.local
-  resolution: "@logicwind/react-native-matomo-tracker-example@workspace:example"
-  dependencies:
-    "@babel/core": ^7.20.0
-    "@babel/preset-env": ^7.20.0
-    "@babel/runtime": ^7.20.0
-    "@react-native/babel-preset": 0.74.83
-    "@react-native/metro-config": 0.74.83
-    "@react-native/typescript-config": 0.74.83
-    babel-plugin-module-resolver: ^5.0.0
-    react: 18.2.0
-    react-native: 0.74.1
-  languageName: unknown
-  linkType: soft
-
-"@logicwind/react-native-matomo-tracker@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@logicwind/react-native-matomo-tracker@workspace:."
-  dependencies:
-    "@commitlint/config-conventional": 17.0.2
-    "@evilmartians/lefthook": 1.5.0
-    "@react-native/eslint-config": 0.73.1
-    "@release-it/conventional-changelog": 5.0.0
-    "@types/jest": 29.5.5
-    "@types/react": 18.2.44
-    commitlint: 17.0.2
-    del-cli: 5.1.0
-    eslint: 8.51.0
-    eslint-config-prettier: 9.0.0
-    eslint-plugin-prettier: 5.0.1
-    jest: 29.7.0
-    prettier: 3.0.3
-    react: 18.2.0
-    react-native: 0.74.1
-    react-native-builder-bob: 0.20.0
-    release-it: 15.0.0
-    turbo: 1.10.7
-    typescript: 5.2.2
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  languageName: unknown
-  linkType: soft
-
 "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1":
   version: 5.1.1-v1
   resolution: "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1"
@@ -2609,6 +2564,51 @@ __metadata:
   checksum: 6f25fd2e3008f259c77207ac9915b02f1628420403b2630c92a07ff963129238c9262afc9e84344c7a23b5cc1f3965e2cd17e3798219f5fd78a63d144d3cceba
   languageName: node
   linkType: hard
+
+"@rausgegangen/react-native-matomo-tracker-example@workspace:example":
+  version: 0.0.0-use.local
+  resolution: "@rausgegangen/react-native-matomo-tracker-example@workspace:example"
+  dependencies:
+    "@babel/core": ^7.20.0
+    "@babel/preset-env": ^7.20.0
+    "@babel/runtime": ^7.20.0
+    "@react-native/babel-preset": 0.74.83
+    "@react-native/metro-config": 0.74.83
+    "@react-native/typescript-config": 0.74.83
+    babel-plugin-module-resolver: ^5.0.0
+    react: 18.2.0
+    react-native: 0.74.1
+  languageName: unknown
+  linkType: soft
+
+"@rausgegangen/react-native-matomo-tracker@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@rausgegangen/react-native-matomo-tracker@workspace:."
+  dependencies:
+    "@commitlint/config-conventional": 17.0.2
+    "@evilmartians/lefthook": 1.5.0
+    "@react-native/eslint-config": 0.73.1
+    "@release-it/conventional-changelog": 5.0.0
+    "@types/jest": 29.5.5
+    "@types/react": 18.2.44
+    commitlint: 17.0.2
+    del-cli: 5.1.0
+    eslint: 8.51.0
+    eslint-config-prettier: 9.0.0
+    eslint-plugin-prettier: 5.0.1
+    jest: 29.7.0
+    prettier: 3.0.3
+    react: 18.2.0
+    react-native: 0.74.1
+    react-native-builder-bob: 0.20.0
+    release-it: 15.0.0
+    turbo: 1.10.7
+    typescript: 5.2.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  languageName: unknown
+  linkType: soft
 
 "@react-native-community/cli-clean@npm:13.6.6":
   version: 13.6.6

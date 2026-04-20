@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "@logicwind/react-native-matomo-tracker": ["./src/index"]
+      "@rausgegangen/react-native-matomo-tracker": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

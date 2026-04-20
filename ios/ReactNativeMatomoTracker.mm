@@ -15,9 +15,9 @@ RCT_EXTERN_METHOD(trackOutlink:(NSString *)url withActionDimensions:(NSArray<NSD
 
 RCT_EXTERN_METHOD(trackSearch:(NSString *)keyword withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
-RCT_EXTERN_METHOD(trackImpression:(NSString *)contentName withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
+RCT_EXTERN_METHOD(trackImpression:(NSString *)contentName withContentPiece:(NSString *)contentPiece withContentTarget:(NSString *)contentTarget withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
-RCT_EXTERN_METHOD(trackInteraction:(NSString *)contentName withContentInteraction:(NSString *)contentInteraction withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
+RCT_EXTERN_METHOD(trackInteraction:(NSString *)contentName withContentInteraction:(NSString *)contentInteraction withContentPiece:(NSString *)contentPiece withContentTarget:(NSString *)contentTarget withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
 RCT_EXTERN_METHOD(trackDownload:(NSString *)category withAction:(NSString *)action withUrl:(NSString *)url withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
@@ -44,6 +44,8 @@ RCT_EXTERN_METHOD(trackCampaign:(NSString *)title withCampaignUrl:(NSString *)ca
 RCT_EXTERN_METHOD(trackMedia:(NSString *)siteId withMediaId:(NSString *)mediaId withMediaTitle:(NSString *)mediaTitle withPlayerName:(NSString *)playerName withMediaType:(NSString *)mediaType withMediaResource:(NSString *)mediaResource withMediaStatus:(NSString *)mediaStatus withMediaLength:(NSString *)mediaLength withMediaProgress:(NSString *)mediaProgress withMediaTTP:(NSString *)mediaTTP withMediaWidth:(NSString *)mediaWidth withMediaHeight:(NSString *)mediaHeight withMediaSE:(NSString *)mediaSE withMediaFullScreen:(NSString *)mediaFullScreen  withActionDimensions:(NSArray<NSDictionary *> *)actionDimensions)
 
 RCT_EXTERN_METHOD(trackCustomDimension:(NSArray<NSDictionary *> *)dimensions)
+
+RCT_EXTERN_METHOD(setCustomDimension:(nonnull NSNumber *)id withValue:(NSString *)value)
 
 + (BOOL)requiresMainQueueSetup
 {

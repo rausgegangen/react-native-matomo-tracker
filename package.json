@@ -1,6 +1,6 @@
 {
-  "name": "@logicwind/react-native-matomo-tracker",
-  "version": "0.3.12",
+  "name": "@rausgegangen/react-native-matomo-tracker",
+  "version": "0.3.13",
   "description": "React-native plugin for matomo analytics",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -26,7 +26,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace @logicwind/react-native-matomo-tracker-example",
+    "example": "yarn workspace @rausgegangen/react-native-matomo-tracker-example",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -44,14 +44,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/logicwind/react-native-matomo-tracker.git"
+    "url": "git+https://github.com/rausgegangen/react-native-matomo-tracker.git"
   },
-  "author": "logicwind <devtools@logicwind.com> (https://github.com/logicwind/react-native-matomo-tracker.git)",
+  "author": "rausgegangen <fabian@rausgegangen.de> (https://github.com/rausgegangen/react-native-matomo-tracker)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/logicwind/react-native-matomo-tracker.git/issues"
+    "url": "https://github.com/rausgegangen/react-native-matomo-tracker/issues"
   },
-  "homepage": "https://github.com/logicwind/react-native-matomo-tracker.git#readme",
+  "homepage": "https://github.com/rausgegangen/react-native-matomo-tracker#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

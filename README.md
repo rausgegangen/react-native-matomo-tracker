@@ -1,8 +1,8 @@
-# @logicwind/react-native-matomo-tracker
+# @rausgegangen/react-native-matomo-tracker
 
-@logicwind/react-native-matomo-tracker is a React Native library that provides integration with the Matomo analytics platform for tracking user interactions and events in mobile applications and TV applications. This package supported **Android, ios, Android TV, Apple TV, Fire TV**.
+@rausgegangen/react-native-matomo-tracker is a React Native library that provides integration with the Matomo analytics platform for tracking user interactions and events in mobile applications and TV applications. This package supported **Android, ios, Android TV, Apple TV, Fire TV**.
 
-With @logicwind/react-native-matomo-tracker, developers can seamlessly integrate Matomo analytics into their React Native applications, allowing them to track various user interactions such as screen views, button clicks, form submissions, and custom events. This integration enables developers to gain insights into how users interact with their mobile apps, monitor app performance, and make data-driven decisions to improve the user experience.
+With @rausgegangen/react-native-matomo-tracker, developers can seamlessly integrate Matomo analytics into their React Native applications, allowing them to track various user interactions such as screen views, button clicks, form submissions, and custom events. This integration enables developers to gain insights into how users interact with their mobile apps, monitor app performance, and make data-driven decisions to improve the user experience.
 
 
 ## Installation
@@ -10,13 +10,13 @@ With @logicwind/react-native-matomo-tracker, developers can seamlessly integrate
 Using npm:
 
 ```shell
-npm install  @logicwind/react-native-matomo-tracker
+npm install  @rausgegangen/react-native-matomo-tracker
 ```
 
 or using yarn:
 
 ```shell
-yarn add @logicwind/react-native-matomo-tracker
+yarn add @rausgegangen/react-native-matomo-tracker
 ```
 
 ### Expo Setup
@@ -61,7 +61,7 @@ enableTracking,
 startSession,
 trackMediaEvent,
 trackCampaign
-} from '@logicwind/react-native-matomo-tracker';
+} from '@rausgegangen/react-native-matomo-tracker';
 
 ```
 
@@ -227,14 +227,14 @@ The trackSearch method is used to track search keyword within a React Native app
 
 ```js
 
-trackImpression("Logicwind")
+trackImpression("Rausgegangen")
 
 ```
 #### Example with Action Custom Dimensions
 
 ```js
 
-trackImpression("Logicwind",[
+trackImpression("Rausgegangen",[
 { key: "1",value:"visit dimension 1" },
 { key:"2",value:"visit dimension 2" },
 { key:"3",value:"action dimension 3" },
@@ -245,7 +245,7 @@ trackImpression("Logicwind",[
 
 ### trackImpression()
 
-The trackImpression method is used to track specific content or elements within a React Native application. It will take only `contentName` with the optional parameter `dimension`.
+The trackImpression method is used to track specific content or elements within a React Native application. It takes `contentName` with the optional parameters `contentPiece`, `contentTarget`, and `dimension`.
 
 #### Example
 
@@ -255,11 +255,19 @@ trackImpression("Test Track Impression")
 
 ```
 
+#### Example with Content Piece and Target
+
+```js
+
+trackImpression("Test Track Impression", "ad-banner.jpg", "https://example.com/landing")
+
+```
+
 #### Example with Action Custom Dimensions
 
 ```js
 
-trackImpression("Test Track Impression",[
+trackImpression("Test Track Impression", "", "", [
 { key: "1",value:"visit dimension 1" },
 { key:"2",value:"visit dimension 2" },
 { key:"3",value:"action dimension 3" },
@@ -270,7 +278,7 @@ trackImpression("Test Track Impression",[
 
 ### trackInteraction()
 
-The trackInteraction method is used to track  users engage with specific elements or perform actions within a React Native application. It will take `contentName` and `contentInteraction`  with the optional parameter `dimension`.
+The trackInteraction method is used to track  users engage with specific elements or perform actions within a React Native application. It takes `contentName` and `contentInteraction` with the optional parameters `contentPiece`, `contentTarget`, and `dimension`.
 
 #### Example
 
@@ -280,11 +288,19 @@ trackInteraction("Test Track interaction","test inetraction")
 
 ```
 
+#### Example with Content Piece and Target
+
+```js
+
+trackInteraction("Test Track interaction", "test inetraction", "ad-banner.jpg", "https://example.com/landing")
+
+```
+
 #### Example with Action Custom Dimensions
 
 ```js
 
-trackInteraction("Test Track interaction","test inetraction",[
+trackInteraction("Test Track interaction", "test inetraction", "", "", [
 { key: "1",value:"visit dimension 1" },
 { key:"2",value:"visit dimension 2" },
 { key:"3",value:"action dimension 3" },
@@ -491,11 +507,29 @@ trackCampaign("Home screen","https://example.com/?mtm_campaign=2020_august_promo
 
 ```
 
+### setCustomDimension()
+
+Persistently set a single custom dimension on the tracker without sending any tracking event. The dimension is attached to every subsequent tracking call (e.g. `trackScreen`, `trackEvent`) until it is changed or cleared. Pass `null` as the value to clear the dimension. [create custom dimension](https://matomo.org/faq/reporting-tools/create-track-and-manage-custom-dimensions/)
+
+* Id (Required): `id`
+<br>The numeric custom dimension id configured on the Matomo dashboard.</br>
+
+* Value (Required): `value`
+<br>The value to assign to the dimension. Pass `null` to clear it.</br>
+
+#### Example
+
+```js
+setCustomDimension(1, 'premium-user');
+// clear it again later:
+setCustomDimension(1, null);
+```
+
 ### trackCustomDimension()
 
-With Custom Dimensions you can assign any custom data to your visitors or actions (like pages, events, site search, ...) and then visualize the reports of how many visits, conversions, pageviews, etc. there were for each Custom Dimension.
+Persistently set multiple custom dimensions on the tracker in a single call. Like `setCustomDimension`, this does **not** send a tracking event — the dimensions will be attached to subsequent `trackScreen`/`trackEvent`/etc. calls.
 
-Dimension contains a key and a value, and where the key is a custom dimension id created on the Matomo dashboard and the value should be a string, you'll need to ensure that the dimensions array is processed correctly. [create custom dimension](https://matomo.org/faq/reporting-tools/create-track-and-manage-custom-dimensions/)
+Dimension contains a key and a value, where the key is a custom dimension id created on the Matomo dashboard and the value is a string.
 
 #### Example
 
@@ -553,8 +587,8 @@ trackGoal(
 | [trackEvent](#trackevent)            | category:String, action:String, name:String, value:Number, dimensions:Dimension  |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [trackOutlink](#trackoutlink)        | url:String, dimensions:Dimension                                                |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [trackSearch](#tracksearch)          | keyword:String, dimensions:Dimension                                            |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
-| [trackImpression](#trackimpression)  | contentName:String, dimensions:Dimension                                        |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
-| [trackInteraction](#trackinteraction)| contentName:String, contentInteraction:String, dimensions:Dimension              |    ✅   |  ✅  |    ✅      |   ✅     |    ✅     |
+| [trackImpression](#trackimpression)  | contentName:String, contentPiece:String, contentTarget:String, dimensions:Dimension |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
+| [trackInteraction](#trackinteraction)| contentName:String, contentInteraction:String, contentPiece:String, contentTarget:String, dimensions:Dimension |    ✅   |  ✅  |    ✅      |   ✅     |    ✅     |
 | [trackDownload](#trackdownload)      | category:String, action:String, url:String                |    ✅   |  ✅  |    ✅      |   ✅     |    ✅     |
 | [setUserId](#setuserid)              | id:String                                                 |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [setVisitorId](#setvisitorid)        | visitorId:String                                          |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
@@ -565,6 +599,7 @@ trackGoal(
 | [trackMediaEvent](#trackmediaevent)  |  siteId: String, mediaId: String, mediaTitle: String, playerName: String, mediaType: String, mediaResource: String, mediaStatus: String,mediaLength?:String, mediaProgress?:String, mediaTTP?: String, mediaWidth?: String, mediaHeight?: String, mediaSE?: String, mediaFullScreen?:String, dimensions:Dimension                                           |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [trackCampaign](#trackcampaign)      | title: String, campaignUrl: String, dimensions:[{key:string,value:string}]                         |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [trackCustomDimension](#trackcustomdimension)      | dimensions:Dimension                        |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
+| [setCustomDimension](#setcustomdimension)          | id:number, value:string \| null             |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 
 ## Dimension Object Property 
 
@@ -607,10 +642,9 @@ Click on “Create new token”
 </details>
 
 
-## react-native-matomo-tracker is crafted mindfully at [Logicwind](https://www.logicwind.com?utm_source=github&utm_medium=github.com-logicwind&utm_campaign=react-native-matomo-tracker)
-We are a 130+ people company developing and designing multiplatform applications using the Lean & Agile methodology. To get more information on the solutions that would suit your needs, feel free to get in touch by [email](mailto:sales@logicwind.com) or through or [contact form](https://www.logicwind.com/contact-us?utm_source=github&utm_medium=github.com-logicwind&utm_campaign=react-native-matomo-tracker)!
+## Credits
 
-We will always answer you with pleasure 😁
+Originally crafted at [Logicwind](https://www.logicwind.com). This fork is maintained by [rausgegangen](https://rausgegangen.de).
 
 ## License
 

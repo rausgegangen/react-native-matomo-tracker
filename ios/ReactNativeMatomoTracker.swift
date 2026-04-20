@@ -150,8 +150,8 @@ class ReactNativeMatomoTracker: NSObject {
         tracker.trackSearch(query: keyword, category: "", resultCount: 0, dimensions: dimensions)
     }
     
-    @objc(trackImpression:withActionDimensions:)
-    func trackImpression(contentName: String, actionDimensions: [NSDictionary]) {
+    @objc(trackImpression:withContentPiece:withContentTarget:withActionDimensions:)
+    func trackImpression(contentName: String, contentPiece: String, contentTarget: String, actionDimensions: [NSDictionary]) {
         Logger.debug("trackImpression called: \(contentName)")
         guard let tracker = matomoTracker else {
             Logger.error("ERROR: matomoTracker is nil")
@@ -159,13 +159,19 @@ class ReactNativeMatomoTracker: NSObject {
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
         setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
-        tracker.trackContentImpression(name: contentName, piece: "", target: "")
+        tracker.trackContentImpression(name: contentName, piece: contentPiece, target: contentTarget)
     }
-    
-    @objc(trackInteraction:withContentInteraction:withActionDimensions:)
-    func trackInteraction(contentName: String, contentInteraction: String, actionDimensions: [NSDictionary]) {
+
+    @objc(trackInteraction:withContentInteraction:withContentPiece:withContentTarget:withActionDimensions:)
+    func trackInteraction(contentName: String, contentInteraction: String, contentPiece: String, contentTarget: String, actionDimensions: [NSDictionary]) {
         Logger.debug("trackInteraction called: \(contentName)")
-        matomoTracker?.trackContentInteraction(name: contentName, interaction: contentInteraction, piece: "", target: "")
+        guard let tracker = matomoTracker else {
+            Logger.error("ERROR: matomoTracker is nil")
+            return
+        }
+        let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
+        setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
+        matomoTracker?.trackContentInteraction(name: contentName, interaction: contentInteraction, piece: contentPiece, target: contentTarget)
     }
     
     @objc(trackDownload:withAction:withUrl:withActionDimensions:)
@@ -254,17 +260,25 @@ class ReactNativeMatomoTracker: NSObject {
     func trackCustomDimension(dimensions: [NSDictionary]) {
         Logger.debug("trackCustomDimension called")
         guard !dimensions.isEmpty else { return }
-        
-        matomoTracker?.track(view: ["customDimension"])
+
         for dimension in dimensions {
             if let key = dimension["key"] as? String,
                let value = dimension["value"] as? String,
                let id = Int(key) {
                 matomoTracker?.setDimension(value, forIndex: id)
-                matomoTracker?.dispatch()
             } else {
                 Logger.error("Error: Key could not be converted to an Int")
             }
+        }
+    }
+
+    @objc(setCustomDimension:withValue:)
+    func setCustomDimension(id: NSNumber, value: NSString?) {
+        Logger.debug("setCustomDimension called: \(id)=\(value ?? "nil")")
+        if let value = value as String? {
+            matomoTracker?.setDimension(value, forIndex: id.intValue)
+        } else {
+            matomoTracker?.remove(dimensionAtIndex: id.intValue)
         }
     }
     
