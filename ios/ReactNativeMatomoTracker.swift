@@ -8,7 +8,6 @@ class ReactNativeMatomoTracker: NSObject {
     var baseURL = "";
     var site_id = "";
     var authToken = "";
-    var _id = "";
     enum Logger {
         static func debug(_ message: @autoclosure () -> Any) {
             #if DEBUG
@@ -30,11 +29,6 @@ class ReactNativeMatomoTracker: NSObject {
     }
     override init() {
         super.init()
-       
-            // Initialize matomoTracker here or in createTracker method
-        _id = newVisitorID()
-        matomoTracker?.forcedVisitorId = _id;
-        Logger.debug("ReactNativeMatomoTracker init: Generated visitor ID = \(_id)")
     }
   
     @objc(createTracker:withSiteId:withToken:)
@@ -79,10 +73,11 @@ class ReactNativeMatomoTracker: NSObject {
             Logger.debug("Creating MatomoTracker...")
             matomoTracker = MatomoTracker(siteId: siteId, queue: queue, dispatcher: dispatcher)
             Logger.info("MatomoTracker created successfully")
-            
-            Logger.debug("Setting visitor ID...")
-            matomoTracker?.forcedVisitorId = _id
-            Logger.debug("Visitor ID set successfully")
+
+            if let persistedUserId = matomoTracker?.userId, persistedUserId.isEmpty {
+                Logger.debug("Clearing legacy empty persisted userId")
+                matomoTracker?.userId = nil
+            }
             
             Logger.info("=== createTracker SUCCESS ===")
         } catch {
@@ -214,7 +209,6 @@ class ReactNativeMatomoTracker: NSObject {
     func setVisitorId(id: String) {
         Logger.debug("setVisitorId called: \(id)")
         matomoTracker?.forcedVisitorId = id
-        _id = id
     }
     
     @objc(disableTracking)
@@ -342,7 +336,8 @@ class ReactNativeMatomoTracker: NSObject {
                         }
         
             
-            query=query+"&cid=\(encodeParameter(value: _id))" +
+            let cid = matomoTracker?.visitorId ?? ""
+            query=query+"&cid=\(encodeParameter(value: cid))" +
             "&uid=\(encodeParameter(value: uid))"
 
 
@@ -402,15 +397,6 @@ class ReactNativeMatomoTracker: NSObject {
     private func encodeParameter(value: String) -> String {
           return value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
       }
-    
-
-    func newVisitorID() -> String {
-        let uuid = UUID().uuidString
-        let sanitizedUUID = uuid.replacingOccurrences(of: "-", with: "")
-        let start = sanitizedUUID.startIndex
-        let end = sanitizedUUID.index(start, offsetBy: 16)
-        return String(sanitizedUUID[start..<end])
-    }
 }
 
 func trackActionCustomDimension(dimensions: [NSDictionary]) -> [CustomDimension] {

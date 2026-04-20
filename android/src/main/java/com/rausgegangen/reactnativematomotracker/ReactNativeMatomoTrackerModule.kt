@@ -20,7 +20,6 @@ import org.json.JSONObject
 import org.matomo.sdk.Matomo
 import org.matomo.sdk.Tracker
 import org.matomo.sdk.TrackerBuilder
-import org.matomo.sdk.extra.CustomDimension
 import org.matomo.sdk.extra.TrackHelper
 import timber.log.Timber
 import java.net.URL
@@ -38,6 +37,15 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   private var authToken: String? = null
   private var site_Id: String = ""
   private var context:ReactApplicationContext  = reactContext
+  private val persistentDimensions = mutableMapOf<Int, String>()
+
+  private fun newTrackBuilder(): TrackHelper {
+    val builder = TrackHelper.track()
+    for ((id, value) in persistentDimensions) {
+      builder.dimension(id, value)
+    }
+    return builder
+  }
 
   override fun getName(): String {
     return NAME
@@ -84,7 +92,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackScreen(screenName:String,title:String,dimensions:ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder.screen(screenName).title(title).with(tracker)
     }
@@ -93,7 +101,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackEvent(category:String,action:String,name:String,value:Float,dimensions:ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder.event(category, action).name(name).value(value).with(tracker)
     }
@@ -110,7 +118,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   fun trackOutlink(url:String,dimensions: ReadableArray?=null) {
     val validUrl = URL(url)
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder
         .outlink(validUrl)
@@ -121,7 +129,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackSearch(keyword:String,dimensions: ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder
       .search(keyword)
@@ -132,7 +140,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackImpression(contentName:String,contentPiece:String="",contentTarget:String="",dimensions: ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder
         .impression(contentName)
@@ -146,7 +154,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackInteraction(contentName:String,contentInteraction:String,contentPiece:String="",contentTarget:String="",dimensions: ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder
         .interaction(contentName, contentInteraction)
@@ -159,7 +167,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackDownload(category: String,action: String,url: String,dimensions: ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder.event(category, action).name(url).with(tracker);
       trackBuilder.download().with(tracker);
@@ -175,7 +183,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackScreens(dimensions: ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder.screens(Application()).with(tracker);
     }
@@ -184,7 +192,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackGoal(goalId:Int,revenue:Float,dimensions: ReadableArray?=null) {
     if (tracker != null) {
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(dimensions,trackBuilder)
       trackBuilder.goal(goalId).revenue(revenue).with(tracker);
     }
@@ -283,7 +291,6 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   fun trackCustomDimension(
     dimensions: ReadableArray?=null
   ) {
-    val currentTracker = tracker ?: return
     if (dimensions == null || dimensions.size() == 0) return
 
     for (i in 0 until dimensions.size()) {
@@ -293,7 +300,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
       if (key != null && value != null) {
         val id = key.toIntOrNull()
         if (id != null) {
-          CustomDimension.setDimension(currentTracker.defaultTrackMe, id, value)
+          persistentDimensions[id] = value
         } else {
           Log.e(TAG, "Key could not be converted to an Int")
         }
@@ -303,8 +310,11 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun setCustomDimension(id: Int, value: String?) {
-    val currentTracker = tracker ?: return
-    CustomDimension.setDimension(currentTracker.defaultTrackMe, id, value)
+    if (value.isNullOrEmpty()) {
+      persistentDimensions.remove(id)
+    } else {
+      persistentDimensions[id] = value
+    }
   }
 
   @ReactMethod
@@ -327,7 +337,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   ) {
 
     if(siteId.isNotEmpty() && tracker!=null){
-      val trackBuilder = TrackHelper.track()
+      val trackBuilder = newTrackBuilder()
       trackActionCustomDimension(actionDimensions,trackBuilder)
       if(mediaStatus=="0") {
         trackBuilder.event(mediaType, "play").name(mediaTitle).with(tracker)
