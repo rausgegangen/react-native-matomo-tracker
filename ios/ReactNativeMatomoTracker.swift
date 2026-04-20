@@ -82,7 +82,6 @@ class ReactNativeMatomoTracker: NSObject {
             
             Logger.debug("Setting visitor ID...")
             matomoTracker?.forcedVisitorId = _id
-            matomoTracker?.userId = _id
             Logger.debug("Visitor ID set successfully")
             
             Logger.info("=== createTracker SUCCESS ===")
