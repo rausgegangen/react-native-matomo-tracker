@@ -2,14 +2,13 @@
   "name": "@rausgegangen/react-native-matomo-tracker",
   "version": "0.3.13",
   "description": "React-native plugin for matomo analytics",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/src/index.d.ts",
+  "main": "src/index.tsx",
+  "module": "src/index.tsx",
+  "types": "src/index.tsx",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
     "src",
-    "lib",
     "android",
     "ios",
     "cpp",
@@ -30,8 +29,7 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
     "release": "release-it"
   },
   "keywords": [
@@ -72,7 +70,6 @@
     "prettier": "3.0.3",
     "react": "18.2.0",
     "react-native": "0.74.1",
-    "react-native-builder-bob": "0.20.0",
     "release-it": "15.0.0",
     "turbo": "1.10.7",
     "typescript": "5.2.2"
@@ -146,19 +143,5 @@
     "tabWidth": 2,
     "trailingComma": "es5",
     "useTabs": false
-  },
-  "react-native-builder-bob": {
-    "source": "src",
-    "output": "lib",
-    "targets": [
-      "commonjs",
-      "module",
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json"
-        }
-      ]
-    ]
   }
 }
