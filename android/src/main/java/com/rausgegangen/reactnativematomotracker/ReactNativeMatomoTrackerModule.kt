@@ -71,7 +71,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun createTracker(uri:String,siteId:Int,token:String) {
+  fun createTracker(uri:String,siteId:Int,token:String,dispatchInterval:Double) {
     authToken = token;
 
     if (uri.isEmpty() &&  siteId <= 0) {
@@ -86,6 +86,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
     else{
       site_Id = siteId.toString();
       setTracker(uri,siteId)
+      tracker?.setDispatchInterval((dispatchInterval * 1000).toLong())
     }
   }
 

@@ -31,8 +31,8 @@ class ReactNativeMatomoTracker: NSObject {
         super.init()
     }
   
-    @objc(createTracker:withSiteId:withToken:)
-    func createTracker(uri: String, siteId: String, token: String) {
+    @objc(createTracker:withSiteId:withToken:withDispatchInterval:)
+    func createTracker(uri: String, siteId: String, token: String, dispatchInterval: NSNumber) {
         Logger.debug("=== createTracker START ===")
         Logger.debug("URI: '\(uri)'")
         Logger.debug("SiteId: '\(siteId)'")
@@ -72,7 +72,8 @@ class ReactNativeMatomoTracker: NSObject {
             
             Logger.debug("Creating MatomoTracker...")
             matomoTracker = MatomoTracker(siteId: siteId, queue: queue, dispatcher: dispatcher)
-            Logger.info("MatomoTracker created successfully")
+            matomoTracker?.dispatchInterval = dispatchInterval.doubleValue
+            Logger.info("MatomoTracker created successfully (dispatchInterval: \(dispatchInterval.doubleValue)s)")
 
             if let persistedUserId = matomoTracker?.userId, persistedUserId.isEmpty {
                 Logger.debug("Clearing legacy empty persisted userId")

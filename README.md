@@ -67,7 +67,13 @@ trackCampaign
 
 ### createTracker()
 
-The createTracker function is used to instantiate a tracker object for Matomo analytics within a React Native application .It requires the parameters `matomo-url` and `siteId`, with the optional parameter `auth_token`.
+The createTracker function is used to instantiate a tracker object for Matomo analytics within a React Native application .It requires the parameters `matomo-url` and `siteId`, with the optional parameters `auth_token` and `dispatchInterval`.
+
+`dispatchInterval` controls how Matomo batches and sends queued events (in **seconds**). It mirrors the Matomo web JavaScript tracker's request queue and defaults to `2.5` (2500ms), the same default as the web tracker:
+
+- `> 0` — events are dispatched in batches every N seconds.
+- `0` — every event is sent immediately (similar to Google Analytics / the web tracker's `disableQueueRequest`).
+- `< 0` — automatic dispatch is disabled; you must flush manually with `trackDispatch()`.
 
  <!-- If you want to create matomo auth_token refere this link https://matomo.org/faq/general/faq_114/ -->
 
@@ -91,6 +97,18 @@ for matomo-url madatory to add `/matomo.php` end of url.
 ```js
 
  createTracker("https://your-matomo-url/matomo.php","siteId","auth_token")
+
+```
+
+#### Example with custom dispatch interval
+
+```js
+
+ // batch and send events every 5 seconds
+ createTracker("https://your-matomo-url/matomo.php","siteId","auth_token",5)
+
+ // send every event immediately
+ createTracker("https://your-matomo-url/matomo.php","siteId","auth_token",0)
 
 ```
 
@@ -361,7 +379,7 @@ setVisitorId("2c534f55fba6cf6e")
 
 ### trackDispatch()
 
-The MatomoTracker will dispatch events every 30 seconds automatically. If you want to dispatch events manually, you can use the trackDispatch() function.
+The MatomoTracker dispatches events on the interval configured via the `dispatchInterval` parameter of `createTracker()` (defaults to every 2.5 seconds). If you want to dispatch events manually, you can use the trackDispatch() function.
 
 #### Example
 
@@ -581,7 +599,7 @@ trackGoal(
 
 | Method                               | Required Parameter                                          | Android | ios | Android TV | Apple TV | Fire TV |
 |--------------------------------------|-----------------------------------------------------------|:-------:|:---:|:----------:|:--------:|:--------:|
-| [createTracker](#createtracker)      | uri: String, siteId: Number, token: String           |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
+| [createTracker](#createtracker)      | uri: String, siteId: Number, token: String, dispatchInterval: Number |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [startSession](#startsession)        | -                                                         |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [trackScreen](#trackscreen)          | screenName: String, title: String, dimensions:Dimension                         |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
 | [trackEvent](#trackevent)            | category:String, action:String, name:String, value:Number, dimensions:Dimension  |    ✅   |  ✅  |    ✅      |   ✅     |   ✅     |
