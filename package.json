@@ -1,6 +1,6 @@
 {
   "name": "@logicwind/react-native-matomo-tracker",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "description": "React-native plugin for matomo analytics",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
