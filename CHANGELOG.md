@@ -1,3 +1,7 @@
+## 0.3.14
+
+- Merged upstream v0.3.13: Fixed token_auth not being sent with trackScreen, trackEvent, trackInteraction, trackOutlink, trackSearch, trackImpression, trackGoal, trackDownload and trackCustomDimension, causing tracking failures on Matomo when a request's timestamp fell outside the server's allowed freshness window.
+
 ## 0.3.13
 
 - Added `contentPiece` and `contentTarget` parameters to `trackImpression` and `trackInteraction` for richer Matomo content tracking.
