@@ -99,7 +99,8 @@ class ReactNativeMatomoTracker: NSObject {
             return
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
-        tracker.track(view: [screenName, title], dimensions: dimensions)
+        let event = Event(tracker: tracker, action: [screenName, title], customTrackingParameters: authTokenParams(), dimensions: dimensions, isCustomAction: false)
+        tracker.track(event)
     }
 
     @objc(trackDispatch)
@@ -116,7 +117,8 @@ class ReactNativeMatomoTracker: NSObject {
             return
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
-        tracker.track(eventWithCategory:category, action:action,name: name,value:value.floatValue,dimensions:dimensions)
+        let event = Event(tracker: tracker, action: [], eventCategory: category, eventAction: action, eventName: name, eventValue: value.floatValue, customTrackingParameters: authTokenParams(), dimensions: dimensions, isCustomAction: true)
+        tracker.track(event)
     }
     
     @objc(trackOutlink:withActionDimensions:)
@@ -128,7 +130,9 @@ class ReactNativeMatomoTracker: NSObject {
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
         setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
-        let event = Event(tracker: tracker, action: ["link"], customTrackingParameters: ["link": url], isCustomAction: true)
+        var linkParams = authTokenParams()
+        linkParams["link"] = url
+        let event = Event(tracker: tracker, action: ["link"], customTrackingParameters: linkParams, isCustomAction: true)
         tracker.track(event)
     }
     
@@ -141,7 +145,8 @@ class ReactNativeMatomoTracker: NSObject {
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
         setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
-        tracker.trackSearch(query: keyword, category: "", resultCount: 0, dimensions: dimensions)
+        let event = Event(tracker: tracker, action: [], customTrackingParameters: authTokenParams(), searchQuery: keyword, searchCategory: "", searchResultsCount: 0, dimensions: dimensions, isCustomAction: false)
+        tracker.track(event)
     }
     
     @objc(trackImpression:withContentPiece:withContentTarget:withActionDimensions:)
@@ -153,7 +158,8 @@ class ReactNativeMatomoTracker: NSObject {
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
         setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
-        tracker.trackContentImpression(name: contentName, piece: contentPiece, target: contentTarget)
+        let event = Event(tracker: tracker, action: [], customTrackingParameters: authTokenParams(), contentName: contentName, contentPiece: contentPiece, contentTarget: contentTarget, isCustomAction: false)
+        tracker.track(event)
     }
 
     @objc(trackInteraction:withContentInteraction:withContentPiece:withContentTarget:withActionDimensions:)
@@ -165,7 +171,8 @@ class ReactNativeMatomoTracker: NSObject {
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
         setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
-        matomoTracker?.trackContentInteraction(name: contentName, interaction: contentInteraction, piece: contentPiece, target: contentTarget)
+        let event = Event(tracker: tracker, action: [], customTrackingParameters: authTokenParams(), contentName: contentName, contentInteraction: contentInteraction, contentPiece: contentPiece, contentTarget: contentTarget, isCustomAction: false)
+        tracker.track(event)
     }
     
     @objc(trackDownload:withAction:withUrl:withActionDimensions:)
@@ -177,7 +184,9 @@ class ReactNativeMatomoTracker: NSObject {
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
         setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
-        let event = Event(tracker: tracker, action: ["download"], customTrackingParameters: ["download": url], isCustomAction: true)
+        var downloadParams = authTokenParams()
+        downloadParams["download"] = url
+        let event = Event(tracker: tracker, action: ["download"], customTrackingParameters: downloadParams, isCustomAction: true)
         tracker.track(event)
     }
     
@@ -202,7 +211,8 @@ class ReactNativeMatomoTracker: NSObject {
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
         setActionCustomDimension(dimensions: dimensions, matomoTracker: tracker)
-        tracker.trackGoal(id: goalId, revenue: revenue.floatValue)
+        let event = Event(tracker: tracker, action: [], customTrackingParameters: authTokenParams(), goalId: goalId, revenue: revenue.floatValue, isCustomAction: false)
+        tracker.track(event)
     }
     
     @objc(setVisitorId:)
@@ -232,13 +242,17 @@ class ReactNativeMatomoTracker: NSObject {
     @objc(trackCampaign:withCampaignUrl:withActionDimensions:)
     func trackCampaign(title: String, campaignUrl: String, actionDimensions: [NSDictionary]) {
         Logger.debug("trackCampaign called: \(title)")
+        guard let tracker = matomoTracker else {
+            Logger.error("ERROR: matomoTracker is nil")
+            return
+        }
         guard let campaignURL = URL(string: campaignUrl),
               let components = URLComponents(url: campaignURL, resolvingAgainstBaseURL: false),
               let queryItems = components.queryItems else {
             Logger.error("ERROR: Invalid campaign URL")
             return
         }
-        
+
         var campaignParameters = [String: String]()
         for queryItem in queryItems {
             if let value = queryItem.value {
@@ -246,8 +260,9 @@ class ReactNativeMatomoTracker: NSObject {
             }
         }
         let dimensions: [CustomDimension] = trackActionCustomDimension(dimensions: actionDimensions)
-        matomoTracker?.track(view: ["campaign"], url: campaignURL, dimensions: dimensions)
-        matomoTracker?.dispatch()
+        let event = Event(tracker: tracker, action: ["campaign"], url: campaignURL, customTrackingParameters: authTokenParams(), dimensions: dimensions, isCustomAction: false)
+        tracker.track(event)
+        tracker.dispatch()
     }
     
     @objc(trackCustomDimension:)
@@ -302,10 +317,12 @@ class ReactNativeMatomoTracker: NSObject {
         }
         
         if mediaStatus == "0" {
-            tracker.track(eventWithCategory: mediaType, action: "play", name: mediaTitle)
+            let playEvent = Event(tracker: tracker, action: [], eventCategory: mediaType, eventAction: "play", eventName: mediaTitle, customTrackingParameters: authTokenParams(), isCustomAction: true)
+            tracker.track(playEvent)
         }
         if mediaStatus == mediaLength {
-            tracker.track(eventWithCategory: mediaType, action: "stop", name: mediaTitle)
+            let stopEvent = Event(tracker: tracker, action: [], eventCategory: mediaType, eventAction: "stop", eventName: mediaTitle, customTrackingParameters: authTokenParams(), isCustomAction: true)
+            tracker.track(stopEvent)
         }
         var uid =  ""
         if var userId = matomoTracker?.userId {
@@ -369,6 +386,9 @@ class ReactNativeMatomoTracker: NSObject {
                 query=query+"&ma_ttp=\(encodeParameter(value: mediaTTP))";
             }
 
+            if(!authToken.isEmpty){
+                query=query+"&token_auth=\(encodeParameter(value: authToken))";
+            }
 
             let urlString = "\(baseUrl)?\(query)"
             
@@ -379,7 +399,6 @@ class ReactNativeMatomoTracker: NSObject {
                    let userAgent = "Darwin/\(device.darwinVersion ?? "Unknown-Version") (\(device.platform); \(device.operatingSystem) \(device.osVersion)), MatomoTrackerSDK/\(MatomoTracker.sdkVersion)\(application.bundleName ?? "Unknown-App")/\(application.bundleShortVersion ?? "Unknown-Version")";
                     request.httpMethod = "POST"
                     request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
-                    request.setValue("\(authToken)", forHTTPHeaderField: "token_auth")
                     let task = URLSession.shared.dataTask(with:  request) { data, response, error in
                         if let httpResponse = response as? HTTPURLResponse {
                             let statusCode = httpResponse.statusCode
@@ -397,6 +416,10 @@ class ReactNativeMatomoTracker: NSObject {
     private func encodeParameter(value: String) -> String {
           return value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
       }
+
+    private func authTokenParams() -> [String: String] {
+        return authToken.isEmpty ? [:] : ["token_auth": authToken]
+    }
 }
 
 func trackActionCustomDimension(dimensions: [NSDictionary]) -> [CustomDimension] {

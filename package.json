@@ -1,6 +1,6 @@
 {
   "name": "@rausgegangen/react-native-matomo-tracker",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "description": "React-native plugin for matomo analytics",
   "main": "src/index.tsx",
   "module": "src/index.tsx",

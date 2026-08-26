@@ -18,6 +18,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import org.matomo.sdk.Matomo
+import org.matomo.sdk.TrackMe
 import org.matomo.sdk.Tracker
 import org.matomo.sdk.TrackerBuilder
 import org.matomo.sdk.extra.TrackHelper
@@ -40,7 +41,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   private val persistentDimensions = mutableMapOf<Int, String>()
 
   private fun newTrackBuilder(): TrackHelper {
-    val builder = TrackHelper.track()
+    val builder = TrackHelper.track(baseTrackMe())
     for ((id, value) in persistentDimensions) {
       builder.dimension(id, value)
     }
@@ -261,15 +262,13 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
 
       query=query+ "&_id=${encode(tracker?.visitorId.toString())}"
 
+      if (!authToken.isNullOrEmpty()) {
+        query = query + "&token_auth=${encode(authToken!!)}"
+      }
+
         try {
           val urlString = "$baseUrl?$query"
-          val jsonBody = """
-                {
-                    "auth_token": "$authToken"
-                }
-            """.trimIndent()
-
-          val requestBody = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaType())
+          val requestBody = "".toRequestBody(null)
 
           val request = Request.Builder()
             .url(urlString)
@@ -399,15 +398,14 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
       if(mediaTTP.isNotEmpty()){
         query=query+ "&ma_ttp=${encode(mediaTTP)}";
       }
+
+      if (!authToken.isNullOrEmpty()) {
+        query = query + "&token_auth=${encode(authToken!!)}"
+      }
+
       try {
         val urlString = "$baseUrl?$query"
-        val jsonBody = """
-        {
-            "auth_token": "$authToken",
-        }
-      """.trimIndent()
-
-        val requestBody = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaType())
+        val requestBody = "".toRequestBody(null)
 
         val request = Request.Builder()
           .url(urlString)
@@ -451,6 +449,14 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
 
   private fun encode(value: String): String {
     return URLEncoder.encode(value, "UTF-8")
+  }
+
+  private fun baseTrackMe(): TrackMe {
+    val trackMe = TrackMe()
+    if (!authToken.isNullOrEmpty()) {
+      trackMe.set("token_auth", authToken)
+    }
+    return trackMe
   }
 
 
