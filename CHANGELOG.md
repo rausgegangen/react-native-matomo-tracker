@@ -1,5 +1,6 @@
 ## 0.3.14
 
+- Added optional `dispatchInterval` parameter (in seconds, default `2.5`) to `createTracker` to configure how often queued events are dispatched to Matomo on both Android and iOS.
 - Merged upstream v0.3.13: Fixed token_auth not being sent with trackScreen, trackEvent, trackInteraction, trackOutlink, trackSearch, trackImpression, trackGoal, trackDownload and trackCustomDimension, causing tracking failures on Matomo when a request's timestamp fell outside the server's allowed freshness window.
 
 ## 0.3.13
