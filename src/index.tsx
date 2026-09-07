@@ -20,12 +20,14 @@ const ReactNativeMatomoTracker = NativeModules.ReactNativeMatomoTracker
 export function createTracker(
   uri: String = '',
   siteId: Number = 0,
-  token: String = ''
+  token: String = '',
+  dispatchInterval: Number = 2.5
 ) {
   return ReactNativeMatomoTracker.createTracker(
     uri,
     Platform.OS == 'ios' ? siteId?.toString() : siteId,
-    token
+    token,
+    dispatchInterval
   );
 }
 

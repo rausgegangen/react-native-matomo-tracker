@@ -72,7 +72,7 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun createTracker(uri:String,siteId:Int,token:String) {
+  fun createTracker(uri:String,siteId:Int,token:String,dispatchInterval:Double) {
     authToken = token;
 
     if (uri.isEmpty() &&  siteId <= 0) {
@@ -87,6 +87,10 @@ class ReactNativeMatomoTrackerModule(reactContext: ReactApplicationContext) :
     else{
       site_Id = siteId.toString();
       setTracker(uri,siteId)
+      // The SDK only treats exactly -1 as "manual dispatch"; any other negative value would
+      // launch the dispatcher with a negative sleep and send immediately.
+      val intervalMs = if (dispatchInterval < 0) -1L else (dispatchInterval * 1000).toLong()
+      tracker?.setDispatchInterval(intervalMs)
     }
   }
 
