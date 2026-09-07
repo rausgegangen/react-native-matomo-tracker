@@ -72,7 +72,7 @@ The createTracker function is used to instantiate a tracker object for Matomo an
 `dispatchInterval` controls how Matomo batches and sends queued events (in **seconds**). It mirrors the Matomo web JavaScript tracker's request queue and defaults to `2.5` (2500ms), the same default as the web tracker:
 
 - `> 0` — events are dispatched in batches every N seconds.
-- `0` — every event is sent immediately (similar to Google Analytics / the web tracker's `disableQueueRequest`).
+- `0` — every event is sent immediately (similar to Google Analytics / the web tracker's `disableQueueRequest`). On iOS this is implemented by flushing the queue right after each tracked event, since the native SDK has no immediate mode.
 - `< 0` — automatic dispatch is disabled; you must flush manually with `trackDispatch()`.
 
  <!-- If you want to create matomo auth_token refere this link https://matomo.org/faq/general/faq_114/ -->
